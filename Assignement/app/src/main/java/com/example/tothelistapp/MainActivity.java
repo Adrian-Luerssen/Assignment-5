@@ -1,9 +1,14 @@
 package com.example.tothelistapp;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -19,10 +24,26 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
+    public static final int BACK = 333;
+    public static final int SAVE = 444;
     private RecyclerView taskView;
     private TaskAdapter taskAdapter;
     private Button addTask;
     private TaskList tasks;
+
+    private final ActivityResultLauncher<Intent> addTaskLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
+        @Override
+        public void onActivityResult(ActivityResult result) {
+            System.out.println("here");
+            if (result.getResultCode() == SAVE){
+                Intent intent = result.getData();
+                String name = intent.getStringExtra(getString(R.string.TaskName));
+                String description = intent.getStringExtra(getString(R.string.TaskDescription));
+                tasks.addTask(new Task(name,new Time(3437),description));
+                updateUI();
+            }
+        }
+    });
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +75,8 @@ public class MainActivity extends AppCompatActivity {
     public void setOnclickListeners(){
         addTask.setOnClickListener(view -> {
             System.out.println("ADD TASK");
-            tasks.addTask(new Task("PP2",new Time(234428923),"Finish assignment 5"));
+            Intent intent = new Intent(this,AddTaskActivity.class);
+            addTaskLauncher.launch(intent);
             updateUI();
         });
     }
