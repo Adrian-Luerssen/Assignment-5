@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">ToTheListApp</string>
+    <string name="AddTask">Add Task</string>
+    <string name="Done">Done</string>
+    <string name="TaskName">Task Name:</string>
+    <string name="TaskDescription">Task Description:</string>
+    <string name="Save">Save</string>
+    <string name="Back">Back</string>
 </resources>

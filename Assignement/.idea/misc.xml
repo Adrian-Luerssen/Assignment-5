@@ -3,7 +3,10 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/Users/adril/OneDrive/Desktop/programming/Sem-2/Assignment-5/Assignment-5/Assignement/app/src/main/res/layout/activity_main.xml" value="0.33" />
+        <entry key="..\:/Users/adril/OneDrive/Desktop/programming/Sem-2/Assignment-5/Assignment-5/Assignement/app/src/main/res/layout/activity_add_task.xml" value="0.30952380952380953" />
+        <entry key="..\:/Users/adril/OneDrive/Desktop/programming/Sem-2/Assignment-5/Assignment-5/Assignement/app/src/main/res/layout/activity_main.xml" value="0.17415730337078653" />
+        <entry key="..\:/Users/adril/OneDrive/Desktop/programming/Sem-2/Assignment-5/Assignment-5/Assignement/app/src/main/res/layout/list_item_crime.xml" value="0.23020833333333332" />
+        <entry key="..\:/Users/adril/OneDrive/Desktop/programming/Sem-2/Assignment-5/Assignment-5/Assignement/app/src/main/res/layout/list_item_task.xml" value="0.25" />
       </map>
     </option>
   </component>
