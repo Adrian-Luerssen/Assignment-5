@@ -13,16 +13,19 @@
             android:id="@+id/Task_Name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textColor = "?android:textColorPrimary"
             android:text="Task Name"/>
         <TextView
             android:id="@+id/Task_Date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textColor = "?android:textColorPrimary"
             android:text="Task Date"/>
         <TextView
             android:id="@+id/Task_Description"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textColor = "?android:textColorPrimary"
             android:text="Task Description"/>
         <Switch
             android:id="@+id/Task_Completed"
@@ -30,6 +33,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="end"
             android:textAlignment="viewEnd"
+            android:textColor = "?android:textColorPrimary"
             android:text="@string/Done" />
     </LinearLayout>
 

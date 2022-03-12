@@ -4,12 +4,13 @@ import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
-import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,6 +21,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.sql.Time;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -32,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
     private TaskList tasks;
 
     private final ActivityResultLauncher<Intent> addTaskLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
+        @RequiresApi(api = Build.VERSION_CODES.O)
         @Override
         public void onActivityResult(ActivityResult result) {
             System.out.println("here");
@@ -39,7 +44,15 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent = result.getData();
                 String name = intent.getStringExtra(getString(R.string.TaskName));
                 String description = intent.getStringExtra(getString(R.string.TaskDescription));
-                tasks.addTask(new Task(name,new Time(3437),description));
+                int year = intent.getIntExtra("YEAR",0);
+                int month = intent.getIntExtra("MONTH",0);
+                int day = intent.getIntExtra("DAY",0);
+                int hour = intent.getIntExtra("HOUR",0);
+                int minute = intent.getIntExtra("MINUTE",0);
+                String dateTime = hour+":"+minute+" "+day+"-"+month+"-"+year;
+
+
+                tasks.addTask(new Task(name,dateTime,description));
                 updateUI();
             }
         }
@@ -53,7 +66,6 @@ public class MainActivity extends AppCompatActivity {
         initVars();
         setOnclickListeners();
 
-        tasks.addTask(new Task("PP2",new Time(234428923),"Finish assignment 5"));
 
         updateUI();
 

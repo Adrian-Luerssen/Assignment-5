@@ -1,14 +1,15 @@
 package com.example.tothelistapp;
 
 import java.sql.Time;
+import java.time.LocalDateTime;
 
 public class Task {
     private String taskName;
-    private Time dueDate;
+    private String dueDate;
     private String description;
     private boolean finished;
 
-    public Task(String taskName, Time dueDate, String description) {
+    public Task(String taskName, String dueDate, String description) {
         this.taskName = taskName;
         this.dueDate = dueDate;
         this.description = description;
@@ -20,11 +21,11 @@ public class Task {
         this.taskName = taskName;
     }
 
-    public Time getDueDate() {
+    public String getDueDate() {
         return dueDate;
     }
 
-    public void setDueDate(Time dueDate) {
+    public void setDueDate(String dueDate) {
         this.dueDate = dueDate;
     }
 

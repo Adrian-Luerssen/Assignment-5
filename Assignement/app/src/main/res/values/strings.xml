@@ -6,4 +6,5 @@
     <string name="TaskDescription">Task Description:</string>
     <string name="Save">Save</string>
     <string name="Back">Back</string>
+    <string name="DatePicker">Select Time</string>
 </resources>
