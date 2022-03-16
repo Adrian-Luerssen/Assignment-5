@@ -4,8 +4,10 @@ import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -90,6 +92,7 @@ public class MainActivity extends AppCompatActivity implements OnCheckedChangeLi
         tasks = taskDAO.load(MainActivity.this);
         taskView = (RecyclerView) findViewById(R.id.task_Recycler_view);
         taskView.setLayoutManager(new LinearLayoutManager(this));
+        new ItemTouchHelper(SwipeCallBack).attachToRecyclerView(taskView);
         addTask = (Button) findViewById(R.id.add_Task);
     }
 
@@ -184,4 +187,20 @@ public class MainActivity extends AppCompatActivity implements OnCheckedChangeLi
             Toast.makeText(view.getContext(), this.task.getTaskName() + " clicked!", Toast.LENGTH_SHORT) .show();
         }
     }
+
+    ItemTouchHelper.SimpleCallback SwipeCallBack = new ItemTouchHelper.SimpleCallback(0,ItemTouchHelper.LEFT) {
+        @Override
+        public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+            return false;
+        }
+
+        @Override
+        public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+            tasks.remove(viewHolder.getAdapterPosition());
+            updateUI();
+        }
+    };
+
+
+
 }

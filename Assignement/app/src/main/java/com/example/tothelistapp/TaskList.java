@@ -22,4 +22,7 @@ public class TaskList {
         tasks.get(position).setFinished(state);
     }
 
+    public void remove(int position) {
+        tasks.remove(position);
+    }
 }

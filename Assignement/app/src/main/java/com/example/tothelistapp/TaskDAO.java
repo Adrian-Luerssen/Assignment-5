@@ -62,7 +62,7 @@ public class TaskDAO {
 
                 taskList = gson.fromJson(bufferedReader, TaskList.class);
 
-                System.out.println(taskList.getTasks().get(0).getTaskName());
+                //System.out.println(taskList.getTasks().get(0).getTaskName());
 
                 bufferedReader.close();
 
