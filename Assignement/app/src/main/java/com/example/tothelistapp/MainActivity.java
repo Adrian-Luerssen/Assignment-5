@@ -26,12 +26,17 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+interface OnCheckedChangeListener {
+    void onCheckedChanged(boolean isChecked, int position);
+}
+
+public class MainActivity extends AppCompatActivity implements OnCheckedChangeListener {
 
     public static final int BACK = 333;
     public static final int SAVE = 444;
     private RecyclerView taskView;
     private TaskAdapter taskAdapter;
+    private TaskDAO taskDAO;
     private Button addTask;
     private TaskList tasks;
 
@@ -40,8 +45,9 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onActivityResult(ActivityResult result) {
             System.out.println("here");
-            if (result.getResultCode() == SAVE){
-                Intent intent = result.getData();
+            Intent intent = result.getData();
+
+            if (result.getResultCode() == SAVE && intent != null) {
                 String name = intent.getStringExtra(getString(R.string.TaskName));
                 String description = intent.getStringExtra(getString(R.string.TaskDescription));
                 int year = intent.getIntExtra("YEAR",0);
@@ -51,9 +57,9 @@ public class MainActivity extends AppCompatActivity {
                 int minute = intent.getIntExtra("MINUTE",0);
                 String dateTime = hour+":"+minute+" "+day+"-"+month+"-"+year;
 
-
                 tasks.addTask(new Task(name,dateTime,description));
                 updateUI();
+
             }
         }
     });
@@ -65,20 +71,23 @@ public class MainActivity extends AppCompatActivity {
 
         initVars();
         setOnclickListeners();
-
-
         updateUI();
+    }
 
-
+    @Override
+    protected void onPause() {
+        super.onPause();
+        taskDAO.save(MainActivity.this, tasks);
     }
 
     private void updateUI() {
-        taskAdapter = new TaskAdapter(tasks.getTasks());
+        taskAdapter = new TaskAdapter(tasks.getTasks(), this);
         taskView.setAdapter(taskAdapter);
     }
 
     private void initVars() {
-        tasks = new TaskList();
+        taskDAO = new TaskDAO();
+        tasks = taskDAO.load(MainActivity.this);
         taskView = (RecyclerView) findViewById(R.id.task_Recycler_view);
         taskView.setLayoutManager(new LinearLayoutManager(this));
         addTask = (Button) findViewById(R.id.add_Task);
@@ -93,13 +102,22 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    public void onCheckedChanged(boolean isChecked, int position) {
+        System.out.println("Checked");
+        tasks.setTaskState(isChecked, position);
+    }
+
     // Adapter
     private class TaskAdapter extends RecyclerView.Adapter<TaskHolder> {
 
-        private List<Task> taskList;
+        private final List<Task> taskList;
 
-        public TaskAdapter(List<Task> tasks) {
+        private final OnCheckedChangeListener finishTaskCallback;
+
+        public TaskAdapter(List<Task> tasks, OnCheckedChangeListener listener) {
             taskList = tasks;
+            finishTaskCallback = listener;
         }
 
         @Override
@@ -111,19 +129,26 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onBindViewHolder(TaskHolder holder, int position) {
             Task task = taskList.get(position);
-            holder.bind(task);
+            holder.bind(task, position);
         }
 
         @Override
         public int getItemCount() {
             return taskList.size();
         }
+
+        public void checkAsDone(boolean status, int position) {
+            finishTaskCallback.onCheckedChanged(status, position);
+        }
+
     }
 
 
     // View Holder
     private class TaskHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+
         private Task task;
+        private int position;
 
         private TextView titleTextView;
         private TextView dateTextView;
@@ -139,18 +164,19 @@ public class MainActivity extends AppCompatActivity {
             descriptionView = (TextView) itemView.findViewById(R.id.Task_Description);
             taskFinishedView = (Switch) itemView.findViewById(R.id.Task_Completed);
 
-            taskFinishedView.setOnClickListener(view -> {
-                System.out.println("here");
-                task.setFinished(taskFinishedView.isChecked());
-                System.out.println(task.isFinished());
+            taskFinishedView.setOnCheckedChangeListener((compoundButton, state) -> {
+                System.out.println("\nTask finished: " + state + this.position);
+                taskAdapter.checkAsDone(state, this.position);
             });
         }
 
-        public void bind(Task task) {
+        public void bind(Task task, int position) {
             this.task = task;
+            this.position = position;
             titleTextView.setText(this.task.getTaskName());
             dateTextView.setText(this.task.getDueDate().toString());
             descriptionView.setText(this.task.getDescription());
+            taskFinishedView.setChecked(task.isFinished());
         }
 
         @Override

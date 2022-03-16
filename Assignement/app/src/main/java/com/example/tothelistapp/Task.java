@@ -4,29 +4,39 @@ import java.sql.Time;
 import java.time.LocalDateTime;
 
 public class Task {
-    private String taskName;
-    private String dueDate;
-    private String description;
+
+    private final String taskName;
+    private final String dueDate;
+    private final String description;
     private boolean finished;
 
     public Task(String taskName, String dueDate, String description) {
         this.taskName = taskName;
         this.dueDate = dueDate;
         this.description = description;
+        this.finished = false;
     }
 
     public String getTaskName() { return taskName; }
 
-    public void setTaskName(String taskName) {
-        this.taskName = taskName;
-    }
-
     public String getDueDate() {
-        return dueDate;
-    }
 
-    public void setDueDate(String dueDate) {
-        this.dueDate = dueDate;
+
+        String tempTime = dueDate.split(" ")[0];
+        String tempHour = tempTime.split(":")[0];
+        String tempMinute = tempTime.split(":")[1];
+
+        String tempDate = dueDate.split(" ")[1];
+        String tempDay = tempDate.split("-")[0];
+        String tempMonth = tempDate.split("-")[1];
+        String tempYear = tempDate.split("-")[2];
+
+        if (tempHour.length() == 1) tempHour = "0" + tempHour;
+        if (tempMinute.length() == 1) tempMinute = "0" + tempMinute;
+        if (tempDay.length() == 1) tempDay = "0" + tempDay;
+        if (tempMonth.length() == 1) tempMonth = "0" + tempMonth;
+
+        return tempHour + ":" + tempMinute + " " + tempDay + "-" + tempMonth + "-" + tempYear;
     }
 
     public boolean isFinished() {
@@ -39,5 +49,5 @@ public class Task {
 
     public String getDescription() { return description; }
 
-    public void setDescription(String description) { this.description = description; }
+
 }
